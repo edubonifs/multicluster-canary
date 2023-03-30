@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: sample-spring-boot
+  name: helloworld-v1
   namespace: argocd
 spec:
   generators:
@@ -11,7 +11,7 @@ spec:
           workload: "true"
   template:
     metadata:
-      name: 'helloworld-v1' # (2)
+      name: '{{name}}-helloworld-v1' # (2)
     spec:
       project: default
       source: # (3)
@@ -19,8 +19,8 @@ spec:
         targetRevision: HEAD
         path: argo-resources/application-set/helloworld-v1
       destination:
-        server: '{{server}}' # (4)
-        namespace: helloworld # (5)
+        namespace: helloworld
+        server: '{{server}}'
       syncPolicy: # (6)
         automated:
           selfHeal: true
