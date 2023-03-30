@@ -5,7 +5,7 @@ metadata:
     app: helloworld
     version: v1
   name: helloworld-v1
-  namespace: sample
+  namespace: helloworld
 spec:
   selector:
     matchLabels:

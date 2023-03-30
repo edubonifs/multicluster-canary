@@ -5,14 +5,17 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - clusters: {} # (1)
+  - clusters:
+      selector:
+        matchLabels:
+          workload: "true"
   template:
     metadata:
       name: 'helloworld-v1' # (2)
     spec:
       project: default
       source: # (3)
-        repoURL: git@github.com:edubonifs/multicluster-canary.git
+        repoURL: https://github.com/edubonifs/multicluster-canary.git
         targetRevision: HEAD
         path: argo-resources/application-set/helloworld-v1
       destination:
