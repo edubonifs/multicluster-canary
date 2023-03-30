@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: istio-resources
+  namespace: argocd
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          workload: "true"
+  template:
+    metadata:
+      name: '{{name}}-istio-resources' # (2)
+    spec:
+      project: default
+      source: # (3)
+        repoURL: https://github.com/edubonifs/multicluster-canary.git
+        targetRevision: HEAD
+        path: istio-resources/application-set/
+      destination:
+        namespace: istio-system
+        server: '{{server}}'
+      syncPolicy: # (6)
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+      ignoreDifferences:
+      - group: networking.istio.io
+        kind: VirtualService
+        jsonPointers:
+        - /spec/http/0

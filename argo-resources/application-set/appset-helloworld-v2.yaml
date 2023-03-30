@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: helloworld-v1
+  name: helloworld-v2
   namespace: argocd
 spec:
   generators:
@@ -11,15 +11,15 @@ spec:
           workload: "true"
   template:
     metadata:
-      name: '{{name}}-istio-resources' # (2)
+      name: '{{name}}-helloworld-v2' # (2)
     spec:
       project: default
       source: # (3)
         repoURL: https://github.com/edubonifs/multicluster-canary.git
         targetRevision: HEAD
-        path: istio-resources/application-set/
+        path: argo-resources/application-set/helloworld-v2
       destination:
-        namespace: istio-system
+        namespace: helloworld
         server: '{{server}}'
       syncPolicy: # (6)
         automated:
@@ -27,8 +27,3 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
-      ignoreDifferences:
-      - group: networking.istio.io
-        kind: VirtualService
-        jsonPointers:
-        - /spec/http/0
