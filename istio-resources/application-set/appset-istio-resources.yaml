@@ -17,7 +17,7 @@ spec:
       source: # (3)
         repoURL: https://github.com/edubonifs/multicluster-canary.git
         targetRevision: HEAD
-        path: istio-resources/application-set/
+        path: istio-resources/application-set/inbound-traffic
       destination:
         namespace: istio-system
         server: '{{server}}'
