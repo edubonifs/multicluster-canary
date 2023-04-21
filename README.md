@@ -200,7 +200,7 @@ helm upgrade thanos bitnami/thanos -n monitoring \
   --values values.yaml
 ```
 
-You should see all the pods ap and running now. You can verify the status of the sidecar Thanos endpoints from the UI:
+You should see all the pods ap and running now. You can verify the status of the sidecar Thanos endpoints from the UI in _Stores_ tab:
 
 ```bash
 k port-forward -n monitoring svc/thanos-query 9090
@@ -217,4 +217,35 @@ helm install grafana bitnami/grafana \
   --set admin.password=GRAFANA-PASSWORD --namespace monitoring
 ```
 
-Once the pod is up and running, access Grafana from the UI and add Prometheus as _Data Source_:
+Once the pod is up and running, access Grafana from the UI and add Prometheus as _Data Source_ with the following URL:
+
+```bash
+http://thanos-query.monitoring.svc.cluster.local:9090
+```
+
+Click Save and Test and you should get a message in green saying that Data source is working.
+
+Now you can import Grafana Dashboards to view the scraped metrics, this step is not necessary but it is good for testing everything was done ok.
+
+We recommend you ading the open source istio grafana dashboards, if you import them at this moment you won't be able to see any metrics, but when you complete next step, you can come back and test.
+
+### Add PodMonitor and ServiceMonitor to scrape Istio Metrics
+
+We have added in this repo a file with the necessary PodMonitor and ServiceMonitor you will need for scrapping istio metrics from workload clusters.
+
+You just have to apply the yaml in both workload clusters in the namespace in which the Prometheus Operator is running:
+
+```bash
+kubectl apply -f monitoring/monitor.yaml --context="${CTX_CLUSTER1}"
+kubectl apply -f monitoring/monitor.yaml --context="${CTX_CLUSTER2}"
+```
+
+Now please generate some load on your istio applications, and test that you are recieving metrics.
+
+If you check on thanos, you should be able to run some queries such as _istio_requests_total_:
+
+![ThanosQuery](images/ThanosQuery.jpeg)
+
+You can also visualize metrics from Grafana:
+
+![GrafanaDashboard](images/GrafanaDashboard.png)
