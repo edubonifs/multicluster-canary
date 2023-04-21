@@ -57,7 +57,7 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 Login using Argo CLI:
 ```bash
 argocd admin initial-password -n argocd
-ARGOHUB=$(oc get svc argocd-server -n argocd -o json | jq -r .status.loadBalancer.ingress\[\].ip)
+ARGOHUB=$(kubectl get svc argocd-server -n argocd -o json | jq -r .status.loadBalancer.ingress\[\].ip)
 argocd login $ARGOHUB --insecure
 ```
 
