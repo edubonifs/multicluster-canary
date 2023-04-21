@@ -8,7 +8,7 @@ The purpose of this lab is making a canary upgrade of our helloword application 
 
 So both apps deployed in workload clusters will perform the canary upgrade at the same time consuming same metrics in a multi-cluster approach.
 
-![ArgoFlow](ArgoFlow.png)
+![ArgoFlow](images/ArgoFlow.png)
 
 ## Deploy clusters
 
