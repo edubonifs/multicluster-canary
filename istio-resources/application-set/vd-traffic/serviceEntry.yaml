@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: vd-productpage-global-bookinfo
-  namespace: bookinfo-frontends
+  name: vd-helloworld-global
+  namespace: helloworld
 spec:
   exportTo:
   - helloworld
@@ -11,14 +11,13 @@ spec:
   - helloworld.global
   location: MESH_INTERNAL
   ports:
-  - name: http-9080
+  - name: http-5000
     number: 5000
     protocol: HTTP
     targetPort: 5000
   resolution: DNS
   subjectAltNames:
-  - spiffe://cluster1/ns/bookinfo-frontends/sa/bookinfo-productpage
-  - spiffe://cluster2/ns/bookinfo-frontends/sa/bookinfo-productpage
+  - spiffe://cluster.local/ns/helloworld/sa/helloworld
   workloadSelector:
     labels:
       app: helloworld
