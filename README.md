@@ -14,26 +14,29 @@ So both apps deployed in workload clusters will perform the canary upgrade at th
 
 ## Deploy clusters
 
-For deploying our clusters, we have a sample script for deploying eks managed clusters with eksctl, you can run create-eks-cluster.sh script in parent folder of the repo.
+:construction_worker: **WiP** -- **Lab under construction**
 
-You must install one hub cluster, which will be the mgmt one:
+| Name                 | Value                               |
+| -----------          | -----------                         |
+| Name cluster hub     | k8s-hub                             |
+| Name cluster 1       | k8s-1                               |
+| Name cluster 2       | k8s-2                               |
+| cluster hub network  | 192.168.100.0/24                    |
+| cluster 1 network    | 192.168.101.0/24                    |
+| cluster 2 network    | 192.168.102.0/24                    |
+| MetalLB cluster hub  | 192.168.100.150-192.168.100.175     |
+| MetalLB cluster 1    | 192.168.101.150-192.168.101.175     |
+| MetalLB cluster 2    | 192.168.102.150-192.168.102.175     |
 
-```bash
-./create-eks-cluster.sh -n argo-hub -t mesh-mgmt
-```
-
-And two workload clusters which will contain the istio installation and resources, the apps and the rollouts:
-
-```bash
-./create-eks-cluster.sh -n argo-rollout1 -t mesh-workload
-./create-eks-cluster.sh -n argo-rollout2 -t mesh-workload
-```
+An example of how to setup the enviroment can be found in this [repository](https://github.com/fperearodriguez/libvirt-k8s-provisioner).
 
 ## Install Istio Multi-Cluster
 
 In our case we have installed istio Multi-Primary on different networks, following istio [docs](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/)
 
 Please don't forget to [verify you installation](https://istio.io/latest/docs/setup/install/multicluster/verify/) deploying sample apps and making sure that you are able to reach both workload clusters from any of them.
+
+Follow the [Istio README](./istio/README.md) to configure Istio multicluster primary.
 
 ## Install ArgoCD and ArgoCD Rollouts
 
