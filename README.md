@@ -39,40 +39,7 @@ Please don't forget to [verify you installation](https://istio.io/latest/docs/se
 Follow the [Istio README](./istio/README.md) to configure Istio multicluster primary.
 
 ## Install ArgoCD and ArgoCD Rollouts
-
-Install and configure ArgoCD in the _hub_ cluster and register both _cluster-1_ and _cluster-2_ workload clusters.
-
-```bash
-export CTX_CLUSTER1=argo-rollout1
-export CTX_CLUSTER2=argo-rollout2
-export CTX_CLUSTERHUB=argo-hub
-```
-
-### ArgoCD: Hub Cluster
-
-First, install ArgoCD in the _hub_ cluster:
-```bash
-kubectl --context="${CTX_CLUSTERHUB}" create namespace argocd
-kubectl --context="${CTX_CLUSTERHUB}" apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-```
-
-Expose Argo Server:
-```
-kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
-```
-
-Login using Argo CLI:
-```bash
-argocd admin initial-password -n argocd
-ARGOHUB=$(kubectl get svc argocd-server -n argocd -o json | jq -r .status.loadBalancer.ingress\[\].ip)
-argocd login $ARGOHUB --insecure
-```
-
-Register both workloads clusters in ArgoCD:
-```bash
-argocd cluster add $CTX_CLUSTER1
-argocd cluster add $CTX_CLUSTER2
-```
+Follow the [Argo README](./argo/README.md) to configure ArgoCD and Argo rollouts.
 
 ### Argo Rollouts: Workload clusters
 
