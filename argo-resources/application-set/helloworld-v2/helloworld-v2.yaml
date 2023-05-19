@@ -3,19 +3,16 @@ kind: Deployment
 metadata:
   labels:
     app: helloworld-canary
-    version: v2
   name: helloworld-v2
   namespace: helloworld
 spec:
   selector:
     matchLabels:
       app: helloworld-canary
-      version: v2
   template:
     metadata:
       labels:
         app: helloworld-canary
-        version: v2
     spec:
       containers:
       - image: docker.io/istio/examples-helloworld-v2
