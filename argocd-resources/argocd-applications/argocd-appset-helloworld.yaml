@@ -34,7 +34,6 @@ spec:
           prune: true
         syncOptions:
           - CreateNamespace=true
-          - ApplyOutOfSyncOnly=true
         managedNamespaceMetadata:
           labels:
             istio-injection: enabled
