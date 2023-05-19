@@ -87,3 +87,11 @@ Run the script below to verify the Istio installation:
 ```bash
 istio/files/verify.sh
 ```
+
+## Kiali (Optional)
+If you want to install [Kiali](https://kiali.io/), just run:
+```bash
+kubectl apply --context="${CTX_CLUSTER1}" -n istio-system -f istio/kiali.yaml
+kubectl apply --context="${CTX_CLUSTER1}" -n istio-system -f istio/kiali.yaml
+```
+
