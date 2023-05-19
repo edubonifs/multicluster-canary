@@ -38,7 +38,7 @@ Please don't forget to [verify you installation](https://istio.io/latest/docs/se
 Follow the [Istio README](./istio/README.md) to configure Istio multicluster primary.
 
 ## Install ArgoCD and ArgoCD Rollouts
-Follow the [Argo README](./argo/README.md) to configure ArgoCD and Argo rollouts.
+Follow the [Argo README](./argocd/README.md) to configure ArgoCD and Argo rollouts.
 
 ### Argo Rollouts: Workload clusters
 
@@ -51,10 +51,6 @@ kubectl --context="${CTX_CLUSTER1}" apply -n argo-rollouts -f https://github.com
 kubectl --context="${CTX_CLUSTER2}" create namespace argo-rollouts
 kubectl --context="${CTX_CLUSTER2}" apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 ```
-
-## Deploy Application Sets
-
-:construction_worker: **WiP** -- **under construction**
 
 ## Deploy the monitoring stack
 
@@ -210,7 +206,7 @@ Click Save and Test and you should get a message in green saying that Data sourc
 
 Now you can import Grafana Dashboards to view the scraped metrics, this step is not necessary but it is good for testing everything was done ok.
 
-We recommend you ading the open source istio grafana dashboards, if you import them at this moment you won't be able to see any metrics, but when you complete next step, you can come back and test.
+We recommend you adding the open source istio grafana dashboards, if you import them at this moment you won't be able to see any metrics, but when you complete next step, you can come back and test.
 
 ### Add PodMonitor and ServiceMonitor to scrape Istio Metrics
 
@@ -232,3 +228,8 @@ If you check on thanos, you should be able to run some queries such as _istio_re
 You can also visualize metrics from Grafana:
 
 ![GrafanaDashboard](images/GrafanaDashboard.png)
+
+
+# Deploy Applications: ApplicationSets
+
+:construction_worker: **WiP** -- **under construction**
