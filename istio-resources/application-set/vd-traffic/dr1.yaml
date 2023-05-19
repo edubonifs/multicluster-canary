@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: helloworld-global-virtual-dest
+  namespace: istio-system
+spec:
+  exportTo:
+  - helloworld
+  - istio-system
+  host: helloworld.global
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+    trafficPolicy:
+      tls:
+        mode: ISTIO_MUTUAL
+        sni: outbound_.5000_._.helloworld.helloworld.svc.cluster.local
+  - labels:
+      version: v2
+    name: v2
+    trafficPolicy:
+      tls:
+        mode: ISTIO_MUTUAL
+        sni: outbound_.5000_._.helloworld.helloworld.svc.cluster.local

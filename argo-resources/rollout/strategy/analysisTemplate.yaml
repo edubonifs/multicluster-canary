@@ -15,15 +15,15 @@ spec:
     successCondition: result[0] > 0.90
     provider:
       prometheus:
-        address: http://prometheus.istio-system:9090
+        address: http://a4c66330e34cc41cdb7cadf2f7ede153-1169737763.us-east-1.elb.amazonaws.com:9090
         query: >+
           sum(irate(istio_requests_total{
-            reporter="source",
-            destination_service=~"{{args.service}}.{{args.namespace}}.svc.cluster.local",
+            reporter="destination",
+            destination_service=~"{{args.service}}.global",
             response_code!~"5.*"}[40s])
           )
           /
           sum(irate(istio_requests_total{
-            reporter="source",
-            destination_service=~"{{args.service}}.{{args.namespace}}.svc.cluster.local"}[40s])
+            reporter="destination",
+            destination_service=~"{{args.service}}.global"}[40s])
           )

@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: rollouts
+  namespace: argocd
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          workload: "true"
+  template:
+    metadata:
+      name: '{{name}}-rollout' # (2)
+    spec:
+      project: default
+      source: # (3)
+        repoURL: https://github.com/edubonifs/multicluster-canary.git
+        targetRevision: HEAD
+        path: argo-resources/rollout/strategy
+      destination:
+        namespace: helloworld
+        server: '{{server}}'
+      syncPolicy: # (6)
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true

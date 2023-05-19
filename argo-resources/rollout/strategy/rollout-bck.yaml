@@ -40,15 +40,13 @@ spec:
         istio:
           virtualService:
             name: helloworld-crosscluster-gateways
-            routes:
-            - helloworld.global
           destinationRule:
             name: helloworld-global-virtual-dest    # required
             canarySubsetName: v2  # required
             stableSubsetName: v1  # required
       steps:
       - setWeight: 10
-      - pause: {duration: 20s}         # pause indefinitely
+      - pause: {}         # pause indefinitely
       - setWeight: 20
       - pause: {duration: 20s}
       - setWeight: 30
