@@ -1,34 +1,37 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: helloworld
+  name: helloworld-appset
   namespace: argocd
 spec:
   generators:
-  - clusters:
-      selector:
-        matchLabels:
-          workloadcluster: "true"
-  - git:
-      repoURL: https://github.com/fperearodriguez/multicluster-canary.git
-      revision: k8s-kvm
-      directories:
-      - path: argocd-applications/helloworld/*
+  - matrix:
+      generators:
+      - clusters:
+          selector:
+            matchLabels:
+              workloadcluster: "true"
+      - git:
+          repoURL: https://github.com/fperearodriguez/multicluster-canary.git
+          revision: kvm-k8s
+          directories:
+          - path: argocd-resources/helloworld/*
   template:
     metadata:
-      name: '{{path.basenameNormalized}}'
+      name: '{{path.basenameNormalized}}-{{name}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/fperearodriguez/multicluster-canary.git
-        targetRevision: k8s-kvm
-        path: argocd-applications/helloworld/{{path.basenameNormalized}}
+        targetRevision: kvm-k8s
+        path: argocd-resources/helloworld/{{path.basenameNormalized}}
       destination:
         namespace: helloworld
         server: '{{server}}'
       syncPolicy:
         automated:
           selfHeal: true
+          prune: true
         syncOptions:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
