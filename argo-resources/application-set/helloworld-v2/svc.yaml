@@ -11,4 +11,4 @@ spec:
   - name: http
     port: 5000
   selector:
-    app: helloworld 
+    app: helloworld-canary 
