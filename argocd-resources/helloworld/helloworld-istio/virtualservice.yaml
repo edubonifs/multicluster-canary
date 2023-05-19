@@ -5,8 +5,8 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - helloworld-v1.fperod.internal
-  - helloworld-v2.fperod.internal
+  - helloworld-k8s-1.fperod.internal
+  - helloworld-k8s-2.fperod.internal
   gateways:
   - ingressgateway
   http:
