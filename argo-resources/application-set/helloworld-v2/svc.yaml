@@ -3,6 +3,8 @@ kind: Service
 metadata:
   labels:
     app: helloworld-canary
+    app: canary
+    version: v2
   name: helloworld-canary
   namespace: helloworld
 spec:
