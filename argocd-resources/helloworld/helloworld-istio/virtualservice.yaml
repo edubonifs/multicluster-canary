@@ -10,7 +10,8 @@ spec:
   gateways:
   - ingressgateway
   http:
-  - match:
+  - name: helloworld-stable
+    match:
     - uri:
         prefix: /hello
     route:
