@@ -13,4 +13,3 @@ spec:
     port: 5000
   selector:
     app: helloworld
-    version: v2
