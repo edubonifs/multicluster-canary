@@ -13,12 +13,11 @@ So both apps deployed in workload clusters will perform the canary upgrade at th
 ![ArgoFlow](images/ArgoFlow.png)
 
 ## Deploy clusters
-
-:construction_worker: **WiP** -- **Lab under construction**
+For this lab, three Kubernetes clusters are created in KVM:
 
 | Name                 | Value                               |
 | -----------          | -----------                         |
-| Name cluster hub     | k8s-hub                             |
+| Name hub cluster     | k8s-hub                             |
 | Name cluster 1       | k8s-1                               |
 | Name cluster 2       | k8s-2                               |
 | cluster hub network  | 192.168.100.0/24                    |
@@ -55,6 +54,8 @@ kubectl --context="${CTX_CLUSTER2}" apply -n argo-rollouts -f https://github.com
 
 ## Deploy Application Sets
 
+:construction_worker: **WiP** -- **under construction**
+
 ## Deploy the monitoring stack
 
 For the rollouts to be processed, we will point to a unique entry point of information.
@@ -65,6 +66,13 @@ We will federate thanos scraping metrics from both Prometheus Operators and quer
 
 ### Deploy Prometheus Operator on Workload Clusters
 
+Load kubernetes contexts:
+```bash
+export CTX_CLUSTER1=k8s-1-admin@k8s-1
+export CTX_CLUSTER2=k8s-2-admin@k8s-2
+export CTX_CLUSTERHUB=k8s-hub-admin@k8s-hub
+```
+
 We will use [Bitnami](https://bitnami.com) helm charts to deploy out stack, so let's add the chart repository:
 
 ```bash
@@ -72,36 +80,38 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 We have good documentation of how to this this in [bitnami docs](https://docs.bitnami.com/tutorials/create-multi-cluster-monitoring-dashboard-thanos-grafana-prometheus/#step-2-install-and-configure-thanos), but I will also document step by step here documenting the problems I have faced for this singular case.
 
-We will deploy one Prometheus Operator for each workload cluster. In each workload cluster we will change the externalLabel of the cluster, so for workload cluster1 we can use _data-producer-1_ and for workload cluster2 we can use _data-producer-2_
+We will deploy one Prometheus Operator for each workload cluster. In each workload cluster we will change the externalLabel of the cluster, so for workload cluster1 we can use _k8s-1_ and for workload cluster2 we can use _k8s-2_
 
 ```bash
-helm install --context="${CTX_CLUSTER1}" prometheus-operator \
+kubectl --context="${CTX_CLUSTER1}" create namespace monitoring
+helm install --kube-context="${CTX_CLUSTER1}" prometheus-operator -n monitoring \
   --set prometheus.thanos.create=true \
   --set operator.service.type=ClusterIP \
   --set prometheus.service.type=ClusterIP \
   --set alertmanager.service.type=ClusterIP \
   --set prometheus.thanos.service.type=LoadBalancer \
-  --set prometheus.externalLabels.cluster="data-producer-1" \
+  --set prometheus.externalLabels.cluster="k8s-1" \
   bitnami/kube-prometheus
 
-helm install --context="${CTX_CLUSTER2}" prometheus-operator \
+kubectl --context="${CTX_CLUSTER2}" create namespace monitoring
+helm install --kube-context="${CTX_CLUSTER2}" prometheus-operator -n monitoring \
   --set prometheus.thanos.create=true \
   --set operator.service.type=ClusterIP \
   --set prometheus.service.type=ClusterIP \
   --set alertmanager.service.type=ClusterIP \
   --set prometheus.thanos.service.type=LoadBalancer \
-  --set prometheus.externalLabels.cluster="data-producer-2" \
+  --set prometheus.externalLabels.cluster="k8s-2" \
   bitnami/kube-prometheus
 ```
 
 This helm Chart will deploy Prometheus Operator along side with a Thanos sidecar that will export the metrics to our principal Thanos in the Hub.
 
 ```bash
-kubectl get svc --context="${CTX_CLUSTER1}" | grep prometheus-operator-prometheus-thanos
-kubectl get svc --context="${CTX_CLUSTER2}" | grep prometheus-operator-prometheus-thanos
+kubectl get svc --context="${CTX_CLUSTER1}" -n monitoring | grep thanos
+kubectl get svc --context="${CTX_CLUSTER2}" -n monitoring | grep thanos
 ```
 
-### Install and Configure Thanos
+### Install and Configure Thanos on the Hub Cluster
 
 For installing and configuring thanos on the Hub Cluster, we will use the file we have located at monitoring/values.yaml in the repo:
 
@@ -147,8 +157,9 @@ minio:
 We have noticed that there is a bug in the values.yaml file, as you are supposed to change the KEY value and set you preferred password. However thanos is being installed always with the same user and random password. So what we will do is installing Thanos in Hub Cluster:
 
 ```bash
-helm install thanos bitnami/thanos -n monitoring \
-  --values values.yaml
+kubectl --context="${CTX_CLUSTERHUB}" create namespace monitoring
+helm install --kube-context="${CTX_CLUSTERHUB}" thanos bitnami/thanos -n monitoring \
+  --values monitoring/values.yaml
 ```
 
 And you will see that _thanos-storegateway-0_ pod is having the following error:
@@ -168,8 +179,8 @@ k get secret -n monitoring thanos-minio -o yaml -o jsonpath={.data.root-password
 Substitute this password by KEY in your values.yaml file, and upgrade the helm chart:
 
 ```bash
-helm upgrade thanos bitnami/thanos -n monitoring \
-  --values values.yaml
+helm upgrade --kube-context="${CTX_CLUSTERHUB}" thanos bitnami/thanos -n monitoring \
+  --values monitoring/values.yaml
 ```
 
 You should see all the pods ap and running now. You can verify the status of the sidecar Thanos endpoints from the UI in _Stores_ tab:
@@ -184,9 +195,9 @@ k port-forward -n monitoring svc/thanos-query 9090
 Use the following command to install Grafana on the Hub cluster:
 
 ```bash
-helm install grafana bitnami/grafana \
+helm install --kube-context="${CTX_CLUSTERHUB}" grafana bitnami/grafana \
   --set service.type=LoadBalancer \
-  --set admin.password=GRAFANA-PASSWORD --namespace monitoring
+  --set admin.password=<GRAFANA-PASSWORD> --namespace monitoring
 ```
 
 Once the pod is up and running, access Grafana from the UI and add Prometheus as _Data Source_ with the following URL:
