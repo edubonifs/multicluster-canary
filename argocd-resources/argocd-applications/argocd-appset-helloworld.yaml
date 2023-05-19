@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helloworld
+  namespace: argocd
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          workloadcluster: "true"
+  - git:
+      repoURL: https://github.com/fperearodriguez/multicluster-canary.git
+      revision: k8s-kvm
+      directories:
+      - path: argocd-applications/helloworld/*
+  template:
+    metadata:
+      name: '{{path.basenameNormalized}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/fperearodriguez/multicluster-canary.git
+        targetRevision: k8s-kvm
+        path: argocd-applications/helloworld/{{path.basenameNormalized}}
+      destination:
+        namespace: helloworld
+        server: '{{server}}'
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+        managedNamespaceMetadata:
+          labels:
+            istio-injection: enabled
+      ignoreDifferences:
+      - group: networking.istio.io
+        kind: VirtualService
+        jsonPointers:
+        - /spec/http/0

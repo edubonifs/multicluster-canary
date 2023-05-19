@@ -28,6 +28,6 @@ argocd login $ARGOHUB --insecure
 
 Register both workloads clusters in ArgoCD:
 ```bash
-argocd cluster add $CTX_CLUSTER1 --label name=k8s-1 --name k8s-1
-argocd cluster add $CTX_CLUSTER2 --label name=k8s-2 --name k8s-2
+argocd cluster add $CTX_CLUSTER1 --label name=k8s-1 --label workloadcluster=true --name k8s-1
+argocd cluster add $CTX_CLUSTER2 --label name=k8s-2 --label workloadcluster=true --name k8s-2
 ```
