@@ -1,13 +1,13 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: rollout-destrule
+  name: helloworld
 spec:
-  host: '*'
+  host: helloworld.helloworld.svc.cluster.local
   subsets:
-  - name: canary  
+  - name: v1  
     labels:        
       version: v1
-  - name: stable 
+  - name: v2 
     labels:        
       version: v2

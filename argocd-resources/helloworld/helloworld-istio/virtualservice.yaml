@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - "*"
+  - helloworld.fperod.internal
   gateways:
   - ingressgateway
   http:
