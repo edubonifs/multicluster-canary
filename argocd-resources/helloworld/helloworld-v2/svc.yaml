@@ -4,7 +4,7 @@ metadata:
   labels:
     app: helloworld
     service: helloworld
-  name: helloworld-stable
+  name: helloworld-canary
   namespace: helloworld
 spec:
   internalTrafficPolicy: Cluster
