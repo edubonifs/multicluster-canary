@@ -15,17 +15,15 @@ spec:
         istio: ingressgateway
       uri:
         prefix: /hello
-    name: helloworld.helloworld.cluster.local
+    name: helloworld.global
     route:
     - destination:
         host: helloworld.global
         port:
           number: 5000
-        subset: v1
       weight: 100
     - destination:
-        host: helloworld.global
+        host: helloworld-canary.global
         port:
           number: 5000
-        subset: v2
       weight: 0

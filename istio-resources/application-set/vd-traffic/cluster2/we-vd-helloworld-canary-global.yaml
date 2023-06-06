@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadEntry
+metadata:
+  labels:
+    app: helloworld-canary
+  name: vd-helloworld-canary-global
+  namespace: helloworld
+spec:
+  address: ade62fbdff6fa4fb5a0e0962fa86de13-579045159.us-east-1.elb.amazonaws.com
+  labels:
+    app: helloworld-canary
+    security.istio.io/tlsMode: istio
+  locality: us-east-1
+  ports:
+    http-5000: 15443

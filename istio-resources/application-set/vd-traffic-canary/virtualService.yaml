@@ -2,14 +2,12 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: helloworld-crosscluster-gateways
-  namespace: istio-system
+  namespace: helloworld
 spec:
-  exportTo:
-  - .
   gateways:
-  - ingressgateway
+  - istio-system/ingressgateway
   hosts:
-  - 'helloworld.global'
+  - helloworld.global
   http:
   - match:
     - sourceLabels:
@@ -17,17 +15,15 @@ spec:
         istio: ingressgateway
       uri:
         prefix: /hello
-    name: helloworld.helloworld.cluster.local
+    name: helloworld.global
     route:
     - destination:
         host: helloworld.global
         port:
           number: 5000
-        subset: v1
-      weight: 0
+      weight: 100
     - destination:
-        host: helloworld.global
+        host: helloworld-canary.global
         port:
           number: 5000
-        subset: v2
-      weight: 100
+      weight: 0

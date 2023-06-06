@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: vd-helloworld-canary-global
+  namespace: helloworld
+spec:
+  exportTo:
+  - helloworld
+  - istio-system
+  hosts:
+  - helloworld-canary.global
+  location: MESH_INTERNAL
+  ports:
+  - name: http-5000
+    number: 5000
+    protocol: HTTP
+    targetPort: 5000
+  resolution: DNS
+  subjectAltNames:
+  - spiffe://cluster.local/ns/helloworld/sa/helloworld
+  workloadSelector:
+    labels:
+      app: helloworld-canary
