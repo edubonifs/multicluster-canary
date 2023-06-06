@@ -17,7 +17,7 @@ spec:
       source: # (3)
         repoURL: https://github.com/edubonifs/multicluster-canary.git
         targetRevision: HEAD
-        path: argo-resources/application-set/helloworld-v1
+        path: argo-resources/application-set/helloworld
       destination:
         namespace: helloworld
         server: '{{server}}'

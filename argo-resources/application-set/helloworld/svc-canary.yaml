@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: helloworld
+    service: helloworld
+  name: helloworld-canary
+  namespace: helloworld
+spec:
+  internalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 5000
+  selector:
+    app: helloworld
