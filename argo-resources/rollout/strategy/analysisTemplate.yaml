@@ -18,12 +18,12 @@ spec:
         address: http://a4c66330e34cc41cdb7cadf2f7ede153-1169737763.us-east-1.elb.amazonaws.com:9090
         query: >+
           sum(irate(istio_requests_total{
-            reporter="destination",
-            destination_service=~"{{args.service}}.global",
+            reporter="source",
+            destination_service=~"helloworld-canary.helloworld.svc.cluster.local",
             response_code!~"5.*"}[40s])
           )
           /
           sum(irate(istio_requests_total{
-            reporter="destination",
-            destination_service=~"{{args.service}}.global"}[40s])
+            reporter="source",
+            destination_service=~"helloworld-canary.helloworld.svc.cluster.local"}[40s])
           )

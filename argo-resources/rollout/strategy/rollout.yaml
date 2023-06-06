@@ -6,13 +6,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      version: v1
       app: helloworld
+      service: helloworld
   template:
     metadata:
       labels:
-        version: v1
         app: helloworld
+        service: helloworld
     spec:
       containers:
       - name: helloworld
@@ -31,21 +31,19 @@ spec:
         - templateName: istio-success-rate
         args:             # arguments allow AnalysisTemplates to be re-used
         - name: service 
-          value: helloworld
+          value: helloworld-canary
         - name: namespace
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+      canaryService: helloworld-canary
+      stableService: helloworld 
       trafficRouting:
         istio:
           virtualService:
             name: helloworld-crosscluster-gateways
             routes:
-            - helloworld.global
-          destinationRule:
-            name: helloworld-global-virtual-dest    # required
-            canarySubsetName: v2  # required
-            stableSubsetName: v1  # required
+            - helloworld
       steps:
       - setWeight: 10
       - pause: {duration: 20s}         # pause indefinitely
