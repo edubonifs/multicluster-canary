@@ -215,8 +215,8 @@ We have added in this repo a file with the necessary PodMonitor and ServiceMonit
 You just have to apply the yaml in both workload clusters in the namespace in which the Prometheus Operator is running:
 
 ```bash
-kubectl apply -f monitoring/monitor.yaml --context="${CTX_CLUSTER1}"
-kubectl apply -f monitoring/monitor.yaml --context="${CTX_CLUSTER2}"
+kubectl apply -f monitoring/monitor.yaml --context="${CTX_CLUSTER1}" -n istio-system
+kubectl apply -f monitoring/monitor.yaml --context="${CTX_CLUSTER2}" -n istio-system
 ```
 
 Now please generate some load on your istio applications, and test that you are recieving metrics.
@@ -233,3 +233,4 @@ You can also visualize metrics from Grafana:
 # Deploy Applications: ApplicationSets
 
 :construction_worker: **WiP** -- **under construction**
+
