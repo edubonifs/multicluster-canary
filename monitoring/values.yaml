@@ -4,12 +4,12 @@ objstoreConfig: |-
     bucket: thanos
     endpoint: {{ include "thanos.minio.fullname" . }}.monitoring.svc.cluster.local:9000
     access_key: admin
-    secret_key: KEY
+    secret_key: obeOpXPLYi
     insecure: true
 querier:
   stores:
-    - SIDECAR-SERVICE-IP-ADDRESS-1:10901
-    - SIDECAR-SERVICE-IP-ADDRESS-2:10901
+    - 192.168.101.150:10901
+    - 192.168.102.150:10901
 bucketweb:
   enabled: true
 compactor:
@@ -31,5 +31,5 @@ minio:
   accessKey:
     password: "admin"
   secretKey:
-    password: "KEY"
+    password: "obeOpXPLYi"
   defaultBuckets: "thanos"

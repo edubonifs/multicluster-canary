@@ -1,4 +1,5 @@
-# Argo
+# ArgoCD
+
 Install and configure ArgoCD in the _hub_ cluster and Argo Rollouts in both _cluster-1_ and _cluster-2_ clusters.
 
 ```bash

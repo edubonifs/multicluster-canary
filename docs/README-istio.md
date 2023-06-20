@@ -1,4 +1,5 @@
 # Istio
+
 Take a look at [Istio requirements](https://istio.io/latest/docs/setup/install/multicluster/before-you-begin/#requirements).
 
 ## Configure clusters
@@ -91,7 +92,6 @@ istio/files/verify.sh
 ## Kiali (Optional)
 If you want to install [Kiali](https://kiali.io/), just run:
 ```bash
-kubectl apply --context="${CTX_CLUSTER1}" -n istio-system -f istio/kiali.yaml
 kubectl apply --context="${CTX_CLUSTER1}" -n istio-system -f istio/kiali.yaml
 ```
 
