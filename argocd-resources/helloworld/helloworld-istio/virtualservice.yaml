@@ -19,3 +19,8 @@ spec:
         host: helloworld.helloworld.svc.cluster.local
         port:
           number: 5000
+    - destination:
+        host: helloworld-canary.helloworld.svc.cluster.local
+        port:
+          number: 5000
+      weight: 0
