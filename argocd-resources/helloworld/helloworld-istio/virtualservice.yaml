@@ -16,12 +16,6 @@ spec:
         prefix: /hello
     route:
     - destination:
-        host: helloworld-stable.helloworld.svc.cluster.local
+        host: helloworld.helloworld.svc.cluster.local
         port:
           number: 5000
-      weight: 100
-    - destination:
-        host: helloworld-canary.helloworld.svc.cluster.local
-        port:
-          number: 5000
-      weight: 0

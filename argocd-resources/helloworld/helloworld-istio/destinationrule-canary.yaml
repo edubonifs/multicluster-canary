@@ -5,6 +5,9 @@ metadata:
 spec:
   host: helloworld-canary.helloworld.svc.cluster.local
   subsets:
+  - name: v1
+    labels:        
+      version: v1
   - name: v2
-    labels:
+    labels:        
       version: v2
