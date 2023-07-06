@@ -1,4 +1,4 @@
-# Multicluster-Canary
+# Multicluster-Canary using Istio, ArgoCD, Rollouts and Federated Thanos
 
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
 
