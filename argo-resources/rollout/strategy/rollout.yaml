@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: docker.io/istio/examples-helloworld-v2
+        image: docker.io/istio/examples-helloworld-v1
         ports:
         - name: http
           containerPort: 5000
