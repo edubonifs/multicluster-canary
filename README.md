@@ -31,14 +31,14 @@ An example of how to setup the enviroment can be found in this [repository](http
 
 ## Install Istio Multi-Cluster
 
-In our case we have installed istio Multi-Primary on different networks, following istio [docs](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/)
+In our case we have installed istio Multi-Primary on different networks, following istio [docs](https://istio.io/latest/internal_docs/setup/install/multicluster/multi-primary_multi-network/)
 
-Please don't forget to [verify you installation](https://istio.io/latest/docs/setup/install/multicluster/verify/) deploying sample apps and making sure that you are able to reach both workload clusters from any of them.
+Please don't forget to [verify you installation](https://istio.io/latest/internal_docs/setup/install/multicluster/verify/) deploying sample apps and making sure that you are able to reach both workload clusters from any of them.
 
-Follow the [Istio README](./docs/README-istio.md) to configure Istio multicluster primary.
+Follow the [Istio README](./internal_docs/README-istio.md) to configure Istio multicluster primary.
 
 ## Install ArgoCD and ArgoCD Rollouts
-Follow the [Argo README](./docs/README-argocd.md) to configure ArgoCD and Argo rollouts.
+Follow the [Argo README](./internal_docs/README-argocd.md) to configure ArgoCD and Argo rollouts.
 
 ### Argo Rollouts: Workload clusters
 
@@ -60,7 +60,7 @@ For achieving this, we will deploy a Prometheus Operator per workload cluster, a
 
 We will federate thanos scraping metrics from both Prometheus Operators and query thanos from our Rollouts Deployments, so that both canary dpeloyments are upgraded with the same information.
 
-Follow the [Monitoring README](./docs/README-monitoring.md) to configure the monitoring stack.
+Follow the [Monitoring README](./internal_docs/README-monitoring.md) to configure the monitoring stack.
 
 # Deploy Applications
 
