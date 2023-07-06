@@ -1,15 +1,15 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: ingressgateway
   namespace: istio-system
 spec:
   selector:
-    istio: ingressgateway # use istio default controller
+    istio: ingressgateway
   servers:
-  - port:
-      number: 80
+  - hosts:
+    - '*'
+    port:
       name: http
+      number: 80
       protocol: HTTP
-    hosts:
-    - "*"
