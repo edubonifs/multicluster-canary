@@ -83,6 +83,108 @@ kubectl --context="${CTX_CLUSTER2}" apply -n argo-rollouts -f https://github.com
 
 ## Deploy Application Sets
 
+For deploying our sample application, which will be helloworld-v1, we have an applicationSet. 
+
+```bash
+k apply -f argo-resources/application-set/appset-helloworld.yaml
+```
+
+This will just deploy two services for our helloworld namespace, as the pod itself will be automatically deployed when we deploy the rollout:
+
+```bash
+% k1 get svc -n helloworld
+helloworld          ClusterIP   10.100.198.8    <none>        5000/TCP   16d
+helloworld-canary   ClusterIP   10.100.181.48   <none>        5000/TCP   16d
+```
+
+First service will serve helloworld-v1 and helloworld-canary will be used for helloworld-v2 when we deploy the rollout.
+
+Also we will deploy the neccessary istio resources for making this to work.
+
+```bash
+k apply -f istio-resources/application-set/appset-istio-resources.yaml
+```
+
+Here we will deploy a VirtualService:
+
+```bash
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  labels:
+    app.kubernetes.io/instance: kube-agent1-istio-resources
+  name: helloworld-crosscluster-gateways
+  namespace: helloworld
+spec:
+  gateways:
+  - istio-system/ingressgateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - sourceLabels:
+        app: istio-ingressgateway
+        istio: ingressgateway
+      uri:
+        prefix: /hello
+    name: helloworld
+    route:
+    - destination:
+        host: helloworld
+        port:
+          number: 5000
+      weight: 100
+    - destination:
+        host: helloworld-canary
+        port:
+          number: 5000
+      weight: 0
+```
+
+Which will reference a weight 100 for helloworld svc and 0 for helloworld-canary, these weights will change when we deploy the rollout. Also we will deploy a gateway object for traffic coming into the cluster:
+
+```bash
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  labels:
+    app.kubernetes.io/instance: kube-agent1-istio-resources
+  name: ingressgateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '*'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+```
+
+From our previous installation of istio multicluster we should also have an east-west gateway already deployed for multicluster communication:
+
+```bash
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: cross-network-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: eastwestgateway
+  servers:
+  - hosts:
+    - '*.local'
+    port:
+      name: tls
+      number: 15443
+      protocol: TLS
+    tls:
+      mode: AUTO_PASSTHROUGH
+```
+
 ## Deploy the monitoring stack
 
 For the rollouts to be processed, we will point to a unique entry point of information.
@@ -249,3 +351,271 @@ If you check on thanos, you should be able to run some queries such as _istio_re
 You can also visualize metrics from Grafana:
 
 ![GrafanaDashboard](images/GrafanaDashboard.png)
+
+## Upgrade your Application with Argo Rollouts
+
+For upgrading our application, we will deploy a new ApplicationSet which consists of two Rollouts.
+
+For applying it, execute the following command:
+
+```bash
+k apply -f argo-resources/rollout/appset-rollouts.yaml
+```
+
+You can check they have been created in both workload clusters:
+
+```bash
+% k1 get rollout -A
+NAMESPACE    NAME         DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+helloworld   helloworld   1         1         1            1           54s
+% k2 get rollout -A
+NAMESPACE    NAME         DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+helloworld   helloworld   1         1         1            1           57s
+```
+
+If you want to check the context of the files, they consist on a rollout and an analysisTemplate.
+
+The analysisTemplate will measure that we are getting more than 90% of request with 200 response_code for the new version:
+
+```bash
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: istio-success-rate
+  namespace: helloworld
+spec:
+  # this analysis template requires a service name and namespace to be supplied to the query
+  args:
+  - name: service
+  - name: namespace
+  metrics:
+  - name: success-rate
+    initialDelay: 60s
+    interval: 20s
+    successCondition: result[0] > 0.90
+    provider:
+      prometheus:
+        address: http://a4c66330e34cc41cdb7cadf2f7ede153-1169737763.us-east-1.elb.amazonaws.com:9090
+        query: >+
+          sum(irate(istio_requests_total{
+            reporter="source",
+            destination_service=~"helloworld-canary.helloworld.svc.cluster.local",
+            response_code!~"5.*"}[40s])
+          )
+          /
+          sum(irate(istio_requests_total{
+            reporter="source",
+            destination_service=~"helloworld-canary.helloworld.svc.cluster.local"}[40s])
+          )
+```
+
+FOr the rollout, we have the following file:
+
+```bash
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: helloworld
+  namespace: helloworld
+spec:
+  selector:
+    matchLabels:
+      app: helloworld
+      service: helloworld
+  template:
+    metadata:
+      labels:
+        app: helloworld
+        service: helloworld
+    spec:
+      containers:
+      - name: helloworld
+        image: docker.io/istio/examples-helloworld-v1
+        ports:
+        - name: http
+          containerPort: 5000
+          protocol: TCP
+      serviceAccountName: helloworld
+  strategy:
+    canary:
+      # analysis will be performed in background, while rollout is progressing through its steps
+      analysis:
+        startingStep: 1   # index of step list, of when to start this analysis
+        templates:
+        - templateName: istio-success-rate
+        args:             # arguments allow AnalysisTemplates to be re-used
+        - name: service 
+          value: helloworld-canary
+        - name: namespace
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      canaryService: helloworld-canary
+      stableService: helloworld 
+      trafficRouting:
+        istio:
+          virtualService:
+            name: helloworld-crosscluster-gateways
+            routes:
+            - helloworld
+      steps:
+      - setWeight: 10
+      - pause: {duration: 20s}         # pause indefinitely
+      - setWeight: 20
+      - pause: {duration: 20s}
+      - setWeight: 30
+      - pause: {duration: 20s}
+      - setWeight: 40
+      - pause: {duration: 20s}
+      - setWeight: 50
+      - pause: {duration: 20s}
+      - setWeight: 60
+      - pause: {duration: 20s}
+      - setWeight: 70
+      - pause: {duration: 20s}
+      - setWeight: 80
+      - pause: {duration: 20s}
+      - setWeight: 90
+      - pause: {duration: 20s}
+```
+
+In this file, we specify that we will start with v1 of our helloworld application, and that we will use the service helloworld-canary for the new version of our application v2. We also specify the analysisTemplate to use and the VirtualService, as well as the weights for the different steps.
+
+This will also deploy helloworld-v1 in both workload clusters, for testing you can make several calls to any of the Ingress Gateways of any workload cluster and you should see that the request hits helloworld-v1 in cluster1 and helloworld-v1 in cluster2. 
+
+```
+% curl http://amazon-svc.us-east-1.elb.amazonaws.com/hello
+Hello version: v1, instance: helloworld-5d79c7c67-jhc4x
+% curl http://amazon-svc.us-east-1.elb.amazonaws.com/hello
+Hello version: v1, instance: helloworld-5d79c7c67-9pzmt
+```
+
+Make sure that the pods are deployed correctly if you don't get any traffic:
+```bash
+% k1 get po -n helloworld
+NAME                         READY   STATUS    RESTARTS   AGE
+helloworld-5d79c7c67-xr8ll   2/2     Running   0          6m31s
+% k2 get po -n helloworld
+NAME                         READY   STATUS    RESTARTS   AGE
+helloworld-5d79c7c67-9lcsw   2/2     Running   0          6m39s
+```
+
+Once we reach this point, we are ready to start the rollout, so let's execute the following command to follow it up in the workload clusters:
+
+```bash
+% kubectl argo rollouts get rollout helloworld -n helloworld --watch
+Name:            helloworld
+Namespace:       helloworld
+Status:          ✔ Healthy
+Strategy:        Canary
+  Step:          18/18
+  SetWeight:     100
+  ActualWeight:  100
+Images:          docker.io/istio/examples-helloworld-v1 (stable)
+Replicas:
+  Desired:       1
+  Current:       1
+  Updated:       1
+  Ready:         1
+  Available:     1
+
+NAME                                   KIND        STATUS     AGE    INFO
+⟳ helloworld                           Rollout     ✔ Healthy  9m42s  
+└──# revision:1                                                      
+   └──⧉ helloworld-5d79c7c67           ReplicaSet  ✔ Healthy  9m42s  stable
+      └──□ helloworld-5d79c7c67-xr8ll  Pod         ✔ Running  9m42s  ready:2/2
+```
+
+The idea of our setup now, is to make a change into the version of the rollout and commit change. This will trigger that the ApplicationSet defined in out mgmt cluster will notice that change and start the rollout of both remote clusters at exactly the same time, as we have only a single rollout that is spread across clusters thanks to the ApplicationSet. Also, as the analysisTemplate is taking the metrics from the mgmt cluster where we have the metrics federated, the VirtualService will also be changed at the same time in both workload clusters.
+
+So let's change the version of our helloworld application with the following command:
+
+```bash
+sed -i 's/-v1/-v2/g' argo-resources/rollout/strategy/rollout.yaml
+```
+
+The only thing that would change would be the image in the spec:
+```bash
+    spec:
+      containers:
+      - name: helloworld
+        image: docker.io/istio/examples-helloworld-v2
+```
+
+We just have to subbmit the changes in our github for making ArgoCD reconcile, depending on your Argo strategy you might need to sync your ApplicationSet:
+
+```bash
+git add argo-resources/rollout/strategy/rollout.yaml
+git commit -m "upgrade app to version v2"
+git push
+```
+
+Once sync, you will see that the Rollout is progressing, and if you check the command I provided before, you should see a green tick if everyhting is going well:
+
+![IntermediateRollout](images/IntermediateRollout.png)
+
+You can also check the VirtualService to see if the weights are changing:
+
+```bash
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  labels:
+    app.kubernetes.io/instance: kube-agent1-istio-resources
+  name: helloworld-crosscluster-gateways
+  namespace: helloworld
+spec:
+  gateways:
+  - istio-system/ingressgateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - sourceLabels:
+        app: istio-ingressgateway
+        istio: ingressgateway
+      uri:
+        prefix: /hello
+    name: helloworld
+    route:
+    - destination:
+        host: helloworld
+        port:
+          number: 5000
+      weight: 40
+    - destination:
+        host: helloworld-canary
+        port:
+          number: 5000
+      weight: 60
+```
+
+When the roolout finishes, you will have something like this:
+
+![FinishedRollout](images/FinishedRollout.png)
+
+And every call you make will be forwarded to v2 version of applications in both workload clusters:
+
+```bash
+Hello version: v2, instance: helloworld-5cd58d86cd-w4c2q
+Hello version: v2, instance: helloworld-5cd58d86cd-dvdh4
+Hello version: v2, instance: helloworld-5cd58d86cd-w4c2q
+Hello version: v2, instance: helloworld-5cd58d86cd-dvdh4
+Hello version: v2, instance: helloworld-5cd58d86cd-w4c2q
+Hello version: v2, instance: helloworld-5cd58d86cd-dvdh4
+Hello version: v2, instance: helloworld-5cd58d86cd-w4c2q
+Hello version: v2, instance: helloworld-5cd58d86cd-dvdh4
+```
+
+So we have managed to upgrade our Application in real time at the same time with the same metrics in multiple clusters using Istio, Thanos, ArgoCD and Rollouts!
+
+Everything Open Source!
+
+
+
+
+
+
+
+
+
