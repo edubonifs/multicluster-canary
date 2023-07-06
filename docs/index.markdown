@@ -3,7 +3,7 @@ layout: default
 ---
 # Multicluster-Canary
 
-:mag: The _main_ branch of this repository uses AWS as Cloud Provider. Switch to _k8s-kvm_ branch to deploy the same lab in KVM.
+The _main_ branch of this repository uses AWS as Cloud Provider. Switch to _k8s-kvm_ branch to deploy the same lab in KVM.
 
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
 
@@ -67,5 +67,5 @@ Follow the [Monitoring README](./internal_docs/README-monitoring.md) to configur
 
 # Deploy Applications
 
-:construction_worker: **WiP** -- **under construction**
+**WiP** -- **under construction**
 
