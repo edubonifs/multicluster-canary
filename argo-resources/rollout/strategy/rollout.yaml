@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: docker.io/istio/examples-helloworld-v2
+        image: docker.io/istio/examples-helloworld-v1
         ports:
         - name: http
           containerPort: 5000
@@ -45,21 +45,11 @@ spec:
             routes:
             - helloworld
       steps:
-      - setWeight: 10
-      - pause: {duration: 20s}         # pause indefinitely
       - setWeight: 20
-      - pause: {duration: 20s}
-      - setWeight: 30
       - pause: {duration: 20s}
       - setWeight: 40
       - pause: {duration: 20s}
-      - setWeight: 50
-      - pause: {duration: 20s}
       - setWeight: 60
       - pause: {duration: 20s}
-      - setWeight: 70
-      - pause: {duration: 20s}
       - setWeight: 80
-      - pause: {duration: 20s}
-      - setWeight: 90
       - pause: {duration: 20s}
