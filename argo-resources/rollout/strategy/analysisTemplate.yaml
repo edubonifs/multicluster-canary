@@ -19,11 +19,11 @@ spec:
         query: >+
           sum(irate(istio_requests_total{
             reporter="source",
-            destination_service=~"helloworld-canary.helloworld.svc.cluster.local",
+            destination_service=~"{{args.service-name}}.helloworld.svc.cluster.local",
             response_code!~"5.*"}[40s])
           )
           /
           sum(irate(istio_requests_total{
             reporter="source",
-            destination_service=~"helloworld-canary.helloworld.svc.cluster.local"}[40s])
+            destination_service=~"{{args.service-name}}.helloworld.svc.cluster.local"}[40s])
           )
