@@ -121,7 +121,7 @@ You should see all the pods ap and running now. You can verify the status of the
 k port-forward -n monitoring svc/thanos-query 9090
 ```
 
-<img src=../images/ThanosStores.png width=700>
+<img src="./assets/images/ThanosStores.png">
 
 ### Install and Configure Grafana
 
@@ -160,8 +160,8 @@ Now please generate some load on your istio applications, and test that you are 
 
 If you check on thanos, you should be able to run some queries such as _istio_requests_total_:
 
-<img src=../images/ThanosQuery.jpeg width=700>
+<img src="./assets/images/ThanosQuery.jpeg">
 
 You can also visualize metrics from Grafana:
 
-<img src=../images/GrafanaDashboard.png width=700>
+<img src="./assets/images/GrafanaDashboard.png">
