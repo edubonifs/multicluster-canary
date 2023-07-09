@@ -8,7 +8,7 @@ The purpose of this lab is making a canary upgrade of our helloword application 
 
 So both apps deployed in workload clusters will perform the canary upgrade at the same time consuming same metrics in a multi-cluster approach.
 
-<img src="/images/ArgoFlow.png">
+<img src="/assets/images/ArgoFlow.png">
 
 # Deploying clusters
 For this lab, three Kubernetes clusters are created in KVM:
