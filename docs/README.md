@@ -1,4 +1,4 @@
-# Istio Primary Multicluster with ArgoCD and Argo Rollouts
+# Istio multiPrimary multiCluster with ArgoCD and Argo Rollouts
 
 The _main_ branch of this repository uses AWS as Cloud Provider. Switch to _k8s-kvm_ branch to deploy the same lab in KVM.
 
@@ -10,7 +10,7 @@ The purpose of this lab is making a canary upgrade of our helloword application 
 
 So both apps deployed in workload clusters will perform the canary upgrade at the same time consuming same metrics in a multi-cluster approach.
 
-<img src=../images/ArgoFlow.png width=700>
+<img src=./images/ArgoFlow.png width=700>
 
 ## Deploy clusters
 For this lab, three Kubernetes clusters are created in KVM:
