@@ -1,5 +1,3 @@
-# Monitoring stack
-
 Load kubernetes contexts:
 ```bash
 export CTX_CLUSTER1=k8s-1-admin@k8s-1

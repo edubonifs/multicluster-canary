@@ -1,5 +1,3 @@
-# Istio
-
 Take a look at [Istio requirements](https://istio.io/latest/docs/setup/install/multicluster/before-you-begin/#requirements).
 
 ## Configure clusters

@@ -1,5 +1,3 @@
-# Istio multiPrimary multiCluster with ArgoCD and Argo Rollouts
-
 The _main_ branch of this repository uses AWS as Cloud Provider. Switch to _k8s-kvm_ branch to deploy the same lab in KVM.
 
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
@@ -10,9 +8,9 @@ The purpose of this lab is making a canary upgrade of our helloword application 
 
 So both apps deployed in workload clusters will perform the canary upgrade at the same time consuming same metrics in a multi-cluster approach.
 
-<img src=./images/ArgoFlow.png width=700>
+<img src="/images/ArgoFlow.png">
 
-## Deploy clusters
+# Deploying clusters
 For this lab, three Kubernetes clusters are created in KVM:
 
 | Name                 | Value                               |
@@ -29,18 +27,18 @@ For this lab, three Kubernetes clusters are created in KVM:
 
 An example of how to setup the enviroment can be found in this [repository](https://github.com/fperearodriguez/libvirt-k8s-provisioner).
 
-## Install Istio Multi-Cluster
+# Installing Istio Multi-Primary multicluster
 
-In our case we have installed istio Multi-Primary on different networks, following istio [docs](https://istio.io/latest/setup/install/multicluster/multi-primary_multi-network/)
+In our case we have installed istio Multi-Primary on different networks, following istio [docs](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/)
 
-Please don't forget to [verify you installation](https://istio.io/latest/setup/install/multicluster/verify/) deploying sample apps and making sure that you are able to reach both workload clusters from any of them.
+Please don't forget to [verify you installation](https://istio.io/latest/docs/setup/install/multicluster/verify/) deploying sample apps and making sure that you are able to reach both workload clusters from any of them.
 
 Follow the [Istio README](./README-istio.md) to configure Istio multicluster primary.
 
-## Install ArgoCD and ArgoCD Rollouts
+# Installing ArgoCD and ArgoCD Rollouts
 Follow the [Argo README](./README-argocd.md) to configure ArgoCD and Argo rollouts.
 
-### Argo Rollouts: Workload clusters
+## Argo Rollouts: Workload clusters
 
 Install kubectl plugin: [Kubectl Plugin](https://argoproj.github.io/argo-rollouts/installation/#kubectl-plugin-installation).
 
@@ -52,7 +50,7 @@ kubectl --context="${CTX_CLUSTER2}" create namespace argo-rollouts
 kubectl --context="${CTX_CLUSTER2}" apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 ```
 
-## Deploy the monitoring stack
+## Deploying the monitoring stack
 
 For the rollouts to be processed, we will point to a unique entry point of information.
 
@@ -62,7 +60,7 @@ We will federate thanos scraping metrics from both Prometheus Operators and quer
 
 Follow the [Monitoring README](./README-monitoring.md) to configure the monitoring stack.
 
-# Deploy Applications
+# Deploying Applications
 
 TODO
 

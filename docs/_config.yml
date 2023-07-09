@@ -18,15 +18,15 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Istio multicluster with ArgoCD and Argo Rollouts
+title: Istio Multi-Primary with ArgoCD, Argo Rollouts and Federated Thanos
 email: fperearodriguez@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-  This lab will setup an Istio multicluster primary with ArgoCD and Argo Rollouts to deploy an example application.
+description: >
+  This lab will setup an Istio Multi-Primary on different networks with ArgoCD and Argo Rollouts to deploy an example application.
 domain: fperearodriguez.github.io 
 url: https://fperearodriguez.github.io
 github_username:  fperearodriguez
 
 # Build settings
-remote_theme: pages-themes/tactile@v0.2.0
+remote_theme: pages-themes/midnight@v0.2.0
 plugins:
 - jekyll-remote-theme
