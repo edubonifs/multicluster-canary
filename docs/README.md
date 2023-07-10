@@ -70,4 +70,4 @@ kubectl --context="${CTX_CLUSTERHUB}" apply -n argocd -f argocd-resources/app-of
 
 By accessing the ArgoCD application created, the resources creation will be shown as follows:
 
-<img src=./assets/images/argocd-app-of-apps.png width=700>
+<img src="./assets/images/argocd-app-of-apps.png">
