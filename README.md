@@ -1,5 +1,13 @@
 # Orchestrating advanced Applications Deployments across multiple Kubernetes clusters with Istio, ArgoCD, and Argo Rollouts
 
+<p align="center">
+## Contributors
+</p>
+
+[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)                |  [Fran Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
+:-------------------------:|:-------------------------:
+![](images/EduPhoto.png)  |  ![](images/FranPhoto.png)
+
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
 
 We will have two workload clusters, in which we will install istio in multicluster primary-primary mode; each of the will have the helloworld-v1 application.
@@ -610,14 +618,4 @@ Hello version: v2, instance: helloworld-5cd58d86cd-dvdh4
 So we have managed to upgrade our Application in real time at the same time with the same metrics in multiple clusters using Istio, Thanos, ArgoCD and Rollouts!
 
 Everything Open Source!
-
-## Contributors
-
-[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)                |  [Fran Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
-:-------------------------:|:-------------------------:
-![](images/EduPhoto.png)  |  ![](images/FranPhoto.png)
-
-
-
-
 
