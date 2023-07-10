@@ -1,5 +1,5 @@
 title: Orchestrating advanced Applications Deployments across multiple Kubernetes clusters with Istio, ArgoCD, and Argo Rollouts
-email: eduboni97@gmail.com, 
+email: eduboni97@gmail.com 
 description: >
   This lab will setup an Istio Multi-Primary architecture on different networks with ArgoCD and Argo Rollouts to upgrade and test application in multiple clusters at the same time, with the same ource of trust.
 domain: edubonifs.github.io 
