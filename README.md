@@ -613,13 +613,7 @@ Everything Open Source!
 
 ## Contributors
 
-[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)
-![Edu Bonilla](images/EduPhoto.png)
-
-[Francisco Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
-![Fran Perea](images/FranPhoto.png)
-
-[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)                |  Fran Perea(https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
+[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)                |  [Fran Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
 :-------------------------:|:-------------------------:
 ![](images/EduPhoto.png)  |  ![](images/FranPhoto.png)
 
