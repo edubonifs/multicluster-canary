@@ -1,8 +1,6 @@
 # Orchestrating advanced Applications Deployments across multiple Kubernetes clusters with Istio, ArgoCD, and Argo Rollouts
 
-<p align="center">
-## Contributors
-</p>
+<h2 align="center">Contributors</h2>
 
 [Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)                |  [Fran Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
 :-------------------------:|:-------------------------:
