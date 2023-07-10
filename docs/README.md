@@ -60,7 +60,14 @@ We will federate thanos scraping metrics from both Prometheus Operators and quer
 
 Follow the [Monitoring README](./README-monitoring.md) to configure the monitoring stack.
 
-# Deploying Applications
+# Deploy Applications
 
-TODO
+The sample application and the Istio resources are deployed via ArgoCD. The _app of apps_ pattern is used to deploy them:
 
+```bash
+kubectl --context="${CTX_CLUSTERHUB}" apply -n argocd -f argocd-resources/app-of-apps.yaml
+```
+
+By accessing the ArgoCD application created, the resources creation will be shown as follows:
+
+<img src=./assets/images/argocd-app-of-apps.png width=700>
