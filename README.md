@@ -1,4 +1,4 @@
-# Multicluster-Canary using Istio, ArgoCD, Rollouts and Federated Thanos
+# Orchestrating advanced Applications Deployments across multiple Kubernetes clusters with Istio, ArgoCD, and Argo Rollouts
 
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
 
