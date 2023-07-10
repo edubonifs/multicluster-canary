@@ -1,13 +1,5 @@
 # Orchestrating advanced Applications Deployments across multiple Kubernetes clusters with Istio, ArgoCD, and Argo Rollouts
 
-## Contributors
-
-[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)
-![Edu Bonilla](images/EduPhoto.png)
-
-[Francisco Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
-![Fran Perea](images/FranPhoto.png)
-
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
 
 We will have two workload clusters, in which we will install istio in multicluster primary-primary mode; each of the will have the helloworld-v1 application.
@@ -619,9 +611,17 @@ So we have managed to upgrade our Application in real time at the same time with
 
 Everything Open Source!
 
+## Contributors
 
+[Edu Bonilla](https://www.linkedin.com/in/eduardo-bonilla-rodriguez-8868b8181/)
+![Edu Bonilla](images/EduPhoto.png)
 
+[Francisco Perea](https://www.linkedin.com/in/francisco-perea-rodr%C3%ADguez-a3ba74105/)
+![Fran Perea](images/FranPhoto.png)
 
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![](images/EduPhoto.png)  |  ![](images/FranPhoto.png)
 
 
 
