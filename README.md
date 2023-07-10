@@ -1,4 +1,4 @@
-Projects/k8s/multicluster-canary/README.md# Multicluster-Canary
+# Istio Multi-Primary with ArgoCD and Argo Rollouts with Federated Thanos
 
 :mag: The _main_ branch of this repository uses AWS as Cloud Provider. Switch to _k8s-kvm_ branch to deploy the same lab in KVM.
 
