@@ -1,5 +1,3 @@
-# Orchestrating advanced Applications Deployments across multiple Kubernetes clusters with Istio, ArgoCD, and Argo Rollouts
-
 This lab will consist on one mgmt cluster which will be named the hub cluster, in which we will have argoCD hub running.
 
 We will have two workload clusters, in which we will install istio in multicluster primary-primary mode; each of the will have the helloworld-v1 application.
